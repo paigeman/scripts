@@ -1,0 +1,22 @@
+#文档头
+[Desktop Entry]
+
+#版本
+Version = 9.8.2
+
+#名字,这个会显示在桌面图标的下方
+Name = Postman
+
+#执行文件路径,使用绝对路径
+Exec = /opt/Postman/Postman
+
+#桌面图标的路径
+Icon = /opt/Postman/app/icons/icon_128x128.png
+
+#类型,用于系统对其分类
+Type = Application
+
+#选择执行时是否从shell执行
+Terminal = false
+#在菜单栏中显示的类别
+Categories = GNOME;code;
