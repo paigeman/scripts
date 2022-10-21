@@ -9,3 +9,9 @@
 
 ntpdate ntp.aliyun.com
 hwclock -w
+if ! test -e ~/sync-time
+then
+  mkdir ~/sync-time
+fi
+cd ~/sync-time
+echo "sync finished" >> $(date +"%Y-%m-%d-%H-%M-%S").txt
