@@ -7,11 +7,12 @@
 # Default-Stop:      0 1 6
 ### END INIT INFO
 
+LOG_DIR=/var/logs/sync-time
 ntpdate ntp.aliyun.com
 hwclock -w
-if ! test -e ~/sync-time
+if ! test -e $LOG_DIR
 then
-  mkdir ~/sync-time
+  mkdir $LOG_DIR
 fi
-cd ~/sync-time
+cd $LOG_DIR
 echo "sync finished" >> $(date +"%Y-%m-%d-%H-%M-%S").txt
