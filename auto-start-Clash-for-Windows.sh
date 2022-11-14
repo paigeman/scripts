@@ -9,8 +9,7 @@ then
     echo "directory does not exist"
     exit 1
 fi
-# FIXME:path occurs two slash
-if ! test -e $CLASH_DIR/cfw
+if ! test -e ${CLASH_DIR%%/}/cfw
 then
     echo "directory is not right, please check"
     exit 1
@@ -19,9 +18,10 @@ fi
 # remove cfw service
 cd /etc/init.d
 update-rc.d cfw remove
+rm cfw
 
 # generate auto start script
-cat > cfw.sh << END_TEXT
+cat > cfw << END_TEXT
 #!/bin/sh
 
 
@@ -32,7 +32,7 @@ cat > cfw.sh << END_TEXT
 ### END INIT INFO
 
 LOG_DIR=/var/log/cfw
-$CLASH_DIR/cfw
+${CLASH_DIR%%/}/cfw
 if ! test -e \$LOG_DIR
 then
   mkdir \$LOG_DIR
@@ -41,6 +41,5 @@ echo "start successfully" >> \$LOG_DIR/\$(date +"%Y-%m-%d-%H-%M-%S").txt
 END_TEXT
     
 # use update-rc service to achieve it
-chmod +x cfw.sh
-# FIXME: update-rc.d: error: unable to read /etc/init.d/cfw
+chmod +x cfw
 update-rc.d cfw defaults
