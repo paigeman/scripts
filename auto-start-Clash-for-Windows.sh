@@ -16,30 +16,17 @@ then
 fi
 
 # remove cfw service
-cd /etc/init.d
-update-rc.d cfw remove
-rm cfw
+cd ~/.config/autostart
+rm cfw.desktop
 
 # generate auto start script
-cat > cfw << END_TEXT
-#!/bin/sh
-
-
-### BEGIN INIT INFO
-# Required-Start:    $all
-# Default-Start:     2 3 4 5
-# Default-Stop:      0 1 6
-### END INIT INFO
-
-LOG_DIR=/var/log/cfw
-${CLASH_DIR%%/}/cfw
-if ! test -e \$LOG_DIR
-then
-  mkdir \$LOG_DIR
-fi
-echo "start successfully" >> \$LOG_DIR/\$(date +"%Y-%m-%d-%H-%M-%S").txt
+cat > cfw.desktop << END_TEXT
+[Desktop Entry]
+    Type=Application
+    Version=0.20.6
+    Name=Clash for Windows
+    Comment=Clash for Windows startup script
+    Exec=${CLASH_DIR%%/}/cfw --no-sandbox
+    StartupNotify=false
+    Terminal=false
 END_TEXT
-    
-# use update-rc service to achieve it
-chmod +x cfw
-update-rc.d cfw defaults
