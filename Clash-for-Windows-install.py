@@ -3,6 +3,7 @@
 import requests
 from tabulate import tabulate
 from tqdm import tqdm
+import tarfile
 
 def get_data(page_number=1):
     page_size = 5
@@ -41,4 +42,13 @@ def download(data, index):
 page_number = 1
 data = get_data(page_number)
 print_table(data)
-index = input("which version do you want to download(input 0 to 4):")
+"""
+as github does not provide the total of datum, 
+it is impossible to calculate how many pages do the api provide
+"""
+op = input("which version do you want to download(input 0 to 4, q to quit):")
+if op == "q":
+    SystemExit()
+else:
+    download(data, int(op))
+    
