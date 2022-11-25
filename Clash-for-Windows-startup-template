@@ -1,0 +1,8 @@
+[Desktop Entry]
+    Type=Application
+    Version=xxx
+    Name=Clash for Windows
+    Comment=Clash for Windows startup script
+    Exec=xxx
+    StartupNotify=false
+    Terminal=false

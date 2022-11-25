@@ -6,6 +6,7 @@ from tqdm import tqdm
 import tarfile
 import os
 import re
+import shutil
 
 DOWNLOAD_DIR = "/root/下载/"
 
@@ -25,20 +26,20 @@ def get_file_name(data, index):
     return data[index]['assets'][7]['name']
 
 def get_file_version(data, index):
-    return data[index]['name']
+    return data[index]['tag_name']
 
 def replace_template_path(content: str, path):
-    if content.startswith("Exec"):
+    if content.strip().startswith("Exec"):
         tokens = content.split("=")
-        tokens[2] = path + " --no-sandbox"
-        return str.join(" ", tokens)
+        tokens[1] = path + " --no-sandbox"
+        return str.join(" = ", tokens)
     return content
 
 def replace_template_version(content: str, version):
-    if content.startswith("Version"):
+    if content.strip().startswith("Version"):
         tokens = content.split("=")
-        tokens[2] = version
-        return str.join(" ", tokens)
+        tokens[1] = version
+        return str.join(" = ", tokens)
     return content
 
 def download(data, index):
@@ -78,6 +79,14 @@ else:
         tmp.extractall(install_directory)
         directory_name = tmp.getnames()[0]
         re_directory_name = re.sub(" ", "-", directory_name)
+    if os.path.exists(install_directory + re_directory_name):
+        shutil.rmtree(install_directory + re_directory_name)
     os.rename(install_directory + directory_name, install_directory + re_directory_name)
-    with open("/usr/share/applications/Clash-for-Windows.desktop", "w") as file:
-        pass
+    exec_path = install_directory + re_directory_name + "/cfw"
+    version = get_file_version(data, int(op))
+    with open("/usr/share/applications/Clash-for-Windows.desktop", "w") as file, open("Clash-for-Windows-desktop-template", "r") as dtp:
+        for data in dtp.readlines():
+            file.writelines(replace_template_version(replace_template_path(data, exec_path), version))
+    with open("/root/.config/autostart/cfw.desktop", "w") as file, open("Clash-for-Windows-startup-template", "r") as stp:
+        for data in stp.readlines():
+            file.writelines(replace_template_version(replace_template_path(data, exec_path), version))
