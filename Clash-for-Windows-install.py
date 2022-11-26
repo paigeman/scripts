@@ -31,14 +31,14 @@ def get_file_version(data, index):
 def replace_template_path(content: str, path):
     if content.strip().startswith("Exec"):
         tokens = content.split("=")
-        tokens[1] = path + " --no-sandbox"
+        tokens[1] = path + " --no-sandbox\n"
         return str.join(" = ", tokens)
     return content
 
 def replace_template_version(content: str, version):
     if content.strip().startswith("Version"):
         tokens = content.split("=")
-        tokens[1] = version
+        tokens[1] = version + "\n"
         return str.join(" = ", tokens)
     return content
 
@@ -79,10 +79,11 @@ else:
         tmp.extractall(install_directory)
         directory_name = tmp.getnames()[0]
         re_directory_name = re.sub(" ", "-", directory_name)
-    if os.path.exists(install_directory + re_directory_name):
-        shutil.rmtree(install_directory + re_directory_name)
-    os.rename(install_directory + directory_name, install_directory + re_directory_name)
-    exec_path = install_directory + re_directory_name + "/cfw"
+    bin_dir = install_directory + re_directory_name
+    if os.path.exists(bin_dir):
+        shutil.rmtree(bin_dir)
+    os.rename(install_directory + directory_name, bin_dir)
+    exec_path = bin_dir + "/cfw"
     version = get_file_version(data, int(op))
     with open("/usr/share/applications/Clash-for-Windows.desktop", "w") as file, open("Clash-for-Windows-desktop-template", "r") as dtp:
         for data in dtp.readlines():
