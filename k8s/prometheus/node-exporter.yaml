@@ -6,14 +6,14 @@ metadata:
   labels:
     k8s-app: node-exporter
 spec:
+  selector:
+    matchLabels:
+      k8s-app: node-exporter
   template:
     metadata:
       labels:
         k8s-app: node-exporter
     spec:
-      selector:
-        matchLabels:
-          k8s-app: node-exporter
       containers:
       - image: prom/node-exporter
         name: node-exporter
