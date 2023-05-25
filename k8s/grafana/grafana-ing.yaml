@@ -8,7 +8,8 @@ spec:
    - host: learn.yzj.icu
      http:
        paths:
-       - path: /
+       - pathType: Prefix
+         path: /
          backend:
            service:
              name: grafana

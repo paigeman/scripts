@@ -1,56 +1,44 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: grafana-core
   namespace: kube-system
+  name: grafana
   labels:
     app: grafana
-    component: core
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: grafana
-      component: core
   template:
     metadata:
       labels:
         app: grafana
-        component: core
     spec:
-      containers:
-      - image: grafana/grafana:9.5.2
-        name: grafana-core
+# Important part - Begin
+
+      initContainers:
+      - name: init-chown-data
+        image: busybox
         imagePullPolicy: IfNotPresent
-        # env:
-        resources:
-          # keep request = limit to keep this container in guaranteed class
-          limits:
-            cpu: 100m
-            memory: 100Mi
-          requests:
-            cpu: 100m
-            memory: 100Mi
-        env:
-          # The following env variables set up basic auth twith the default admin user and admin password.
-          - name: GF_AUTH_BASIC_ENABLED
-            value: "true"
-          - name: GF_AUTH_ANONYMOUS_ENABLED
-            value: "false"
-          # - name: GF_AUTH_ANONYMOUS_ORG_ROLE
-          #   value: Admin
-          # does not really work, because of template variables in exported dashboards:
-          # - name: GF_DASHBOARDS_JSON_ENABLED
-          #   value: "true"
-        readinessProbe:
-          httpGet:
-            path: /login
-            port: 3000
-          # initialDelaySeconds: 30
-          # timeoutSeconds: 1
+        command: ["chown", "-R", "472:472", "/data"]
         volumeMounts:
-        - name: grafana-persistent-storage
-          mountPath: /var
+        - mountPath: /data
+          name: grafana-data
+# Important part - End
+
+      containers:
+      - name: grafana-core
+        image: grafana/grafana:9.5.2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
+          name: grafana-ui
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /var/lib/grafana
+          name: grafana-data
       volumes:
-      - name: grafana-persistent-storage
-        emptyDir: {}
+      - name: grafana-data
+        emptyDir: {} # replace with your storage choice
+
