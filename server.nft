@@ -1,0 +1,40 @@
+table inet filter {
+	map input_vmap {
+		type inet_proto : verdict
+		elements = { tcp : jump TCP, udp : jump UDP }
+	}
+
+  set web {
+		type inet_service
+		flags interval
+	}
+
+	chain input {
+		type filter hook input priority 0; policy drop;
+		iif "lo" accept comment "Accept any localhost traffic"
+		iif != "lo" ip daddr 127.0.0.0/8 counter packets 0 bytes 0 drop comment "drop connections to loopback not coming from loopback"
+		ct state invalid log prefix "Invalid-Input: " level info flags all counter packets 95 bytes 6479 drop comment "Drop invalid connections"
+		icmp type echo-request limit rate 20 bytes/second burst 500 bytes counter packets 17 bytes 2040 accept comment "No ping floods"
+		icmp type echo-request drop comment "No ping floods"
+		ct state { established, related } counter packets 172135 bytes 99807569 accept comment "Accept traffic originated from us"
+		icmp type { destination-unreachable, router-advertisement, router-solicitation, time-exceeded, parameter-problem } accept comment "Accept ICMP"
+		ip protocol igmp accept comment "Accept IGMP"
+		meta l4proto vmap @input_vmap
+	}
+
+	chain forward {
+		type filter hook forward priority 0; policy drop;
+	}
+
+	chain output {
+		type filter hook output priority 0; policy drop;
+	}
+
+	chain TCP {
+    tcp dport 22 ct state new limit rate 15/minute log prefix "New SSH connection: " counter accept comment "Avoid brute force on SSH"
+    tcp dport @web counter accept comment "Accept web server"
+	}
+
+	chain UDP {
+	}
+}
