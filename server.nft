@@ -33,6 +33,7 @@ table inet filter {
 	chain TCP {
     tcp dport 22 ct state new limit rate 15/minute log prefix "New SSH connection: " counter accept comment "Avoid brute force on SSH"
     tcp dport @web counter accept comment "Accept web server"
+    tcp dport 5900 accept comment "Accept vnc"
 	}
 
 	chain UDP {
