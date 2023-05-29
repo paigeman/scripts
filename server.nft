@@ -28,7 +28,7 @@ table inet filter {
 
   chain output {
     type filter hook output priority 0; policy drop;
-    tcp dport 22 accept
+    tcp sport 22 accept
     tcp dport @web counter accept comment "Accept web server"
   }
 
