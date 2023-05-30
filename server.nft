@@ -30,6 +30,7 @@ table inet filter {
     type filter hook output priority 0; policy drop;
     tcp sport 22 accept
     tcp sport @web counter accept comment "Accept web server"
+    udp sport 53 accept
   }
 
   chain TCP {
@@ -39,5 +40,6 @@ table inet filter {
   }
 
   chain UDP {
+    udp dport 53 accept
   }
 }
