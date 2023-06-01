@@ -33,6 +33,7 @@ table inet filter {
     udp dport 53 accept
     # tcp sport 53 accept
     ip protocol icmp icmp type echo-request counter accept
+    tcp dport 22 accept
   }
 
   chain TCP {
@@ -40,6 +41,7 @@ table inet filter {
     tcp dport @web counter accept comment "Accept web server"
     tcp dport 5900 accept comment "Accept vnc"
     # tcp dport 53 accept
+    tcp sport 22 accept
   }
 
   chain UDP {
