@@ -34,8 +34,7 @@ table inet filter {
     # tcp sport 53 accept
     ip protocol icmp icmp type echo-request counter accept
     tcp dport 22 accept
-    iif "lo" log prefix "lo: " level info flags all accept comment "Accept any localhost traffic"
-    iif != "lo" ip daddr 127.0.0.0/8 log prefix "lo drop: " level info flags all counter packets 0 bytes 0 drop comment "drop connections to loopback not coming from loopback"
+    oif "lo" log prefix "lo: " level info flags all accept comment "Accept any localhost traffic"
     ip protocol icmp icmp type echo-reply accept
   }
 
