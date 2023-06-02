@@ -36,6 +36,7 @@ table inet filter {
     tcp dport 22 accept
     oif "lo" log prefix "lo: " level info flags all accept comment "Accept any localhost traffic"
     ip protocol icmp icmp type echo-reply accept
+    tcp sport {80, 443} accept
   }
 
   chain TCP {
@@ -44,6 +45,7 @@ table inet filter {
     tcp dport 5900 accept comment "Accept vnc"
     # tcp dport 53 accept
     tcp sport 22 accept
+    tcp dport {80, 443} accept
   }
 
   chain UDP {
