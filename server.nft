@@ -37,8 +37,10 @@ table inet filter {
     oif "lo" log prefix "lo: " level info flags all accept comment "Accept any localhost traffic"
     ip protocol icmp icmp type echo-reply accept
     tcp dport {80, 443} accept
-    # for minikube
-    # oifname "lo" tcp sport {32768-32772} accept
+    # for nfs
+    tcp sport 2049 accept
+    udp sport 2049 accept
+    tcp sport @web counter packets 0 bytes 0 accept comment "Accept web server"
   }
 
   chain TCP {
@@ -48,11 +50,14 @@ table inet filter {
     # tcp dport 53 accept
     tcp sport 22 accept
     tcp sport {80, 443} accept
-    # for minikube
-    # iifname "lo" tcp dport {32768-32772} accept
+    # for nfs
+    #tcp dport 2049 accept
+    tcp dport @web counter packets 0 bytes 0 accept comment "Accept web server"
   }
 
   chain UDP {
     udp sport 53 accept
+    # for nfs
+    #udp dport 2049 accept
   }
 }
