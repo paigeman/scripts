@@ -1,5 +1,5 @@
 {
-	// Place your cpp_demo 工作区 snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
+	// Place your 工作区 snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
 	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
 	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
 	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are: 
@@ -20,5 +20,29 @@
 		"prefix": "ios",
 		"body" : [ "#include <iostream>" ],
 		"description": "include iostream.h"
+	},
+	"include": {
+		"scope": "c,cpp",
+		"prefix": "incl",
+		"body": [ "#include <$1>$0" ],
+		"description": "include file from std lib"
+	},
+	"include from current directory": {
+		"scope": "c,cpp",
+		"prefix": "incl-cur",
+		"body": [ "#include \"$1\"$0" ],
+		"description": "include from current directory"
+	},
+	"c main": {
+		"scope": "c,cpp",
+		"prefix": "c-main",
+		"body": [ "int main(void) {\n\t$0\n\treturn 0;\n}" ],
+		"description": "c style main function"
+	},
+	"cpp main": {
+		"scope": "cpp",
+		"prefix": "cpp-main",
+		"body": [ "int main() {\n\t$0\n\treturn 0;\n}" ],
+		"description": "cpp style main function"
 	}
 }
