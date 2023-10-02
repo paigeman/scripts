@@ -44,5 +44,11 @@
 		"prefix": "cpp-main",
 		"body": [ "int main() {\n\t$0\n\treturn 0;\n}" ],
 		"description": "cpp style main function"
+	},
+	"using declaration": {
+		"scope": "cpp",
+		"prefix": "using",
+		"body": [ "using $1::$2;$0" ],
+		"description": "using declaration"
 	}
 }
