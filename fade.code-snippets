@@ -50,5 +50,14 @@
 		"prefix": "using",
 		"body": [ "using $1::$2;$0" ],
 		"description": "using declaration"
-	}
+	},
+	"c/cpp head file": {
+        "scope": "c,cpp",
+        "isFileTemplate": true,
+        "body": [ "#ifndef ${TM_FILENAME/(\\w+)?[-._\\s]+(\\w+)/${1:/upcase}_${2:/upcase}/g}",
+                  "#define ${TM_FILENAME/(\\w+)?[-._\\s]+(\\w+)/${1:/upcase}_${2:/upcase}/g}",
+                  "$0",
+                  "#endif" ],
+        "description": "c/cpp head file"
+    }
 }
