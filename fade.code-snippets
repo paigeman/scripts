@@ -15,11 +15,11 @@
 	// 	],
 	// 	"description": "Log output to console"
 	// }
-	"include iostream.h": {
-		"scope":  "cpp",
+	"include iostream": {
+		"scope":  "c,cpp",
 		"prefix": "ios",
-		"body" : [ "#include <iostream>" ],
-		"description": "include iostream.h"
+		"body" : [ "#include <iostream>$0" ],
+		"description": "include iostream"
 	},
 	"include": {
 		"scope": "c,cpp",
@@ -51,7 +51,7 @@
 		"body": [ "using $1::$2;$0" ],
 		"description": "using declaration"
 	},
-	"c/cpp head file": {
+    "c/cpp head file": {
         "scope": "c,cpp",
         "isFileTemplate": true,
         "body": [ "#ifndef ${TM_FILENAME/(\\w+)?[-._\\s]+(\\w+)/${1:/upcase}_${2:/upcase}/g}",
@@ -59,5 +59,17 @@
                   "$0",
                   "#endif" ],
         "description": "c/cpp head file"
-    }
+    },
+	"include string": {
+		"scope":  "c,cpp",
+		"prefix": "str",
+		"body" : [ "#include <string>$0" ],
+		"description": "include string"
+	},
+	"return something": {
+		"scope": "c,cpp,java",
+		"prefix": "ret",
+		"body": [ "return $1;$0" ],
+		"description": "return something"
+	}
 }
