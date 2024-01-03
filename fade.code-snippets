@@ -66,10 +66,37 @@
 		"body" : [ "#include <string>$0" ],
 		"description": "include string"
 	},
+	"include cstring": {
+		"scope": "cpp",
+		"prefix": "cstr",
+		"body": [ "#include <cstring>$0" ],
+		"description": "include cstring"
+	},
+	"include string.h": {
+		"scope": "c",
+		"prefix": "cstr",
+		"body": [ "#include <string.h>$0" ],
+		"description": "include string.h"
+	},
 	"return something": {
 		"scope": "c,cpp,java",
 		"prefix": "ret",
 		"body": [ "return $1;$0" ],
 		"description": "return something"
+	},
+	"cpp class" : {
+		"scope": "cpp",
+		"prefix": "cppclz",
+		"body": [ "class $1",
+				  "{",
+				  "$0",
+				  "};" ],
+		"description": "cpp class"
+	}, 
+	"template": {
+		"scope": "cpp",
+		"prefix": "templ",
+		"body": [ "template <${1:typename} ${2:Type}>$0" ],
+		"description": "cpp template"
 	}
 }

@@ -10,8 +10,9 @@
 - `docker` 的安装脚本
 - 一些 `Dockerfile`
 - `Linux` 下的一些 `desktop` 文件
-- `kubernetes` 及其衍生产品安装部署用到的一些列脚本
+- `kubernetes` 及其衍生产品安装部署用到的一系列脚本
 - `maven` 的配置文件（国内使用）
 - `Clash for Windows` 在 `Linux` 下的安装脚本
 - `nftables` 防火墙的配置文件
+- `Visual Studio Code` 的 `Snippets` 配置文件
 - 其它一些脚本
