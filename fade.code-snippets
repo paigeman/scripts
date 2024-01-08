@@ -98,5 +98,11 @@
 		"prefix": "templ",
 		"body": [ "template <${1:typename} ${2:Type}>$0" ],
 		"description": "cpp template"
+	},
+	"usingn": {
+		"scope": "cpp",
+		"prefix": "usingn",
+		"body": [ "using namespace ${1:std};$0" ],
+		"description": "using namespace"
 	}
 }
