@@ -104,5 +104,35 @@
 		"prefix": "usingn",
 		"body": [ "using namespace ${1:std};$0" ],
 		"description": "using namespace"
+	},
+	"include vector": {
+		"scope": "cpp",
+		"prefix": "vect",
+		"body": [ "#include <vector>$0" ],
+		"description: "include vector"
+	},
+	"include algorithm": {
+		"scope": "cpp",
+		"prefix": "algo",
+		"body": [ "#include <algorithm>$0" ],
+		"description: "include algorithm"
+	},
+	"include iterator": {
+		"scope": "cpp",
+		"prefix": "iter",
+		"body": [ "#include <iterator>$0" ],
+		"description": "include iterator"
+	},
+	"include list": {
+		"scope": "cpp",
+		"prefix": "lst",
+		"body": [ "#include <list>$0" ],
+		"description": "include list"
+	},
+	"include set": {
+		"scope": "cpp",
+		"prefix": "set",
+		"body": [ "#include <set>$0" ],
+		"description": "include set"
 	}
 }
