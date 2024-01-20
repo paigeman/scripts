@@ -14,4 +14,5 @@
 - `maven` 的配置文件（国内使用）
 - `Clash for Windows` 在 `Linux` 下的安装脚本
 - `nftables` 防火墙的配置文件
+- 恢复Windows默认应用的注册表（ `cmd` 、`batch` ...）
 - 其它一些脚本
