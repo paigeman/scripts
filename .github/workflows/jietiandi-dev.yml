@@ -16,7 +16,7 @@ jobs:
           python-version: '3.x'
       - name: Install requirements
         working-directory: jietiandi
-        run: pip install -r requirements.txt 
+        run: pip3 install -r requirements.txt 
       - name: Sign
         env: 
           USERNAME: ${{ secrets.JIETIANDI_USERNAME }}
