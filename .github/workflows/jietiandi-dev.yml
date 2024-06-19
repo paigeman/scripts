@@ -16,14 +16,14 @@ jobs:
           python-version: '3.x'
       - name: Install requirements
         working-directory: jietiandi
-        run: pip3 install -r requirements.txt 
+        run: pip install -r requirements.txt 
       - name: Sign
         env: 
           USERNAME: ${{ secrets.JIETIANDI_USERNAME }}
           PASSWORD: ${{ secrets.JIETIANDI_PASSWORD }}
         run: |
           chmod u+x sign.py
-          ./sign.py
+          python ./sign.py
         working-directory: jietiandi
       - name: Post
         env:
