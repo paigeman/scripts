@@ -6,7 +6,7 @@ on:
   schedule:
     - cron: '0/12 1-4 * * *'
 jobs:
-  sign:
+  post:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -23,6 +23,8 @@ jobs:
         env:
           USERNAME: ${{ secrets.JIETIANDI_USERNAME }}
           PASSWORD: ${{ secrets.JIETIANDI_PASSWORD }}
-        run: ./post.py
+        run: |
+          chmod u+x post.py
+          ./post.py
         working-directory: jietiandi
   

@@ -4,7 +4,7 @@ on:
     branches:
       - 18-post-in-jietiandi-forum-automatically
 jobs:
-  sign:
+  dev:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -21,12 +21,16 @@ jobs:
         env: 
           USERNAME: ${{ secrets.JIETIANDI_USERNAME }}
           PASSWORD: ${{ secrets.JIETIANDI_PASSWORD }}
-        run: ./sign.py
+        run: |
+          chmod u+x sign.py
+          ./sign.py
         working-directory: jietiandi
       - name: Post
         env:
           USERNAME: ${{ secrets.JIETIANDI_USERNAME }}
           PASSWORD: ${{ secrets.JIETIANDI_PASSWORD }}
-        run: ./post.py
+        run: |
+          chmod u+x post.py
+          ./post.py
         working-directory: jietiandi
   

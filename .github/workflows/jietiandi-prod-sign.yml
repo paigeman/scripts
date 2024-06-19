@@ -23,6 +23,8 @@ jobs:
         env: 
           USERNAME: ${{ secrets.JIETIANDI_USERNAME }}
           PASSWORD: ${{ secrets.JIETIANDI_PASSWORD }}
-        run: ./sign.py
+        run: |
+          chmod u+x sign.py
+          ./sign.py
         working-directory: jietiandi
   
