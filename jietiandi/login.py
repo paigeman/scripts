@@ -131,8 +131,6 @@ class Login:
         if self.cookies_name in listdir():
             try:
                 with open(self.cookies_name, 'rb') as f:
-                    # self.session = requests.Session(cookies=pickle.load(f))
-                    # self.session.cookies.jar.set_cookie(pickle.load(f))
                     self.session.cookies.jar._cookies = pickle.load(f)
                 response = self.session.get(f'https://{self.hostname}/home.php?mod=space').text
                 
@@ -149,14 +147,6 @@ class Login:
     def go_home(self):
         return self.session.get(f'https://{self.hostname}/forum.php').text
 
-    # def get_conis(self):
-    #     try:
-    #         res = self.session.get(f'https://{self.hostname}/home.php?mod=spacecp&ac=credit&showcredit=1&inajax=1&ajaxtarget=extcreditmenu_menu').text
-    #         coins = re.search(r'<span id="hcredit_2">(.+?)</span>', res).group(1)
-    #         logging.info(f'当前金币数量：{coins}')
-    #     except Exception:
-    #         logging.error('获取金币数量失败！', exc_info=True)
-
     def main(self):
 
         try:
@@ -164,14 +154,6 @@ class Login:
                 logging.info('成功使用cookies登录')
             else:
                 self.account_login()
-            # res = self.go_home()
-            # self.post_formhash = re.search(r'<input type="hidden" name="formhash" value="(.+?)" />', res).group(1)
-            # credit =re.search(r' class="showmenu">(.+?)</a>', res).group(1)
-            # logging.info(f'{credit},提交文章formhash:{self.post_formhash}')
-
-            # self.get_conis()
-
-            # cookies_name = 'cookies.pk'
             with open(self.cookies_name, 'wb') as f:
                 pickle.dump(self.session.cookies.jar._cookies, f)
                 logging.info('新的Cookie已保存。')

@@ -1,0 +1,28 @@
+name: jietiandi-prod-post
+on: 
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0/12 1-4 * * *'
+jobs:
+  sign:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        # This is the version of the action for setting up Python, not the Python version.
+        uses: actions/setup-python@v5
+        with:
+          # Semantic version range syntax or exact version of a Python version
+          python-version: '3.x'
+      - name: Install requirements
+        run: pip install -r requirements.txt
+        working-directory: jietiandi
+      - name: Post
+        env:
+          USERNAME: ${{ secrets.JIETIANDI_USERNAME }}
+          PASSWORD: ${{ secrets.JIETIANDI_PASSWORD }}
+        run: ./post.py
+        working-directory: jietiandi
+  
