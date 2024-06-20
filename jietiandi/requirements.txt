@@ -1,3 +1,4 @@
 curl_cffi==0.6.4
 ddddocr==1.5.4
 Requests==2.32.3
+numpy==1.26.4
