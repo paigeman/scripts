@@ -31,6 +31,6 @@ jobs:
           PASSWORD: ${{ secrets.JIETIANDI_PASSWORD }}
         run: |
           chmod u+x post.py
-          ./post.py
+          python ./post.py
         working-directory: jietiandi
   

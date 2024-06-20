@@ -17,7 +17,7 @@ jobs:
           # Semantic version range syntax or exact version of a Python version
           python-version: '3.x'
       - name: Install requirements
-        run: pip install -r requirements.txt 
+        run: pip3 install -r requirements.txt 
         working-directory: jietiandi
       - name: Sign
         env: 
@@ -25,6 +25,6 @@ jobs:
           PASSWORD: ${{ secrets.JIETIANDI_PASSWORD }}
         run: |
           chmod u+x sign.py
-          ./sign.py
+          python ./sign.py
         working-directory: jietiandi
   
