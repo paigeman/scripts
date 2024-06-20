@@ -15,4 +15,5 @@
 - `Clash for Windows` 在 `Linux` 下的安装脚本
 - `nftables` 防火墙的配置文件
 - 恢复Windows默认应用的注册表（ `cmd` 、`batch` ...）
+- 截天帝论坛的自动打卡和挖矿脚本（基于[798love/discuz](https://github.com/798love/discuz)，感谢 @798love ）
 - 其它一些脚本
