@@ -1,0 +1,30 @@
+name: jietiandi-prod-sign
+on: 
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 23 * * *'
+jobs:
+  sign:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        # This is the version of the action for setting up Python, not the Python version.
+        uses: actions/setup-python@v5
+        with:
+          # Semantic version range syntax or exact version of a Python version
+          python-version: '3.x'
+      - name: Install requirements
+        run: pip3 install -r requirements.txt 
+        working-directory: jietiandi
+      - name: Sign
+        env: 
+          USERNAME: ${{ secrets.JIETIANDI_USERNAME }}
+          PASSWORD: ${{ secrets.JIETIANDI_PASSWORD }}
+        run: |
+          chmod u+x sign.py
+          python ./sign.py
+        working-directory: jietiandi
+  
