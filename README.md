@@ -1,5 +1,9 @@
 # scripts
 
+[![jietiandi-prod-post](https://github.com/paigeman/scripts/actions/workflows/jietiandi-prod-post.yml/badge.svg?branch=main)](https://github.com/paigeman/scripts/actions/workflows/jietiandi-prod-post.yml)
+[![jietiandi-prod-sign](https://github.com/paigeman/scripts/actions/workflows/jietiandi-prod-sign.yml/badge.svg?branch=main)](https://github.com/paigeman/scripts/actions/workflows/jietiandi-prod-sign.yml)
+[![jietiandi-dev](https://github.com/paigeman/scripts/actions/workflows/jietiandi-dev.yml/badge.svg?branch=18-post-in-jietiandi-forum-automatically)](https://github.com/paigeman/scripts/actions/workflows/jietiandi-dev.yml)
+
 ### 仓库的内容
 
 一些个人在日常生活中使用的脚本
