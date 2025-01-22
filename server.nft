@@ -20,6 +20,8 @@ table inet filter {
     icmp type { destination-unreachable, router-advertisement, router-solicitation, time-exceeded, parameter-problem } accept comment "Accept ICMP"
     ip protocol igmp accept comment "Accept IGMP"
     meta l4proto vmap @input_vmap
+    tcp dport {21115-21119} accept
+    udp dport 21116 accept
   }
 
   chain forward {
@@ -41,6 +43,8 @@ table inet filter {
     tcp sport 2049 accept
     udp sport 2049 accept
     tcp sport @web counter packets 0 bytes 0 accept comment "Accept web server"
+    tcp sport {21115-21119} accept
+    udp sport 21116 accept
   }
 
   chain TCP {
