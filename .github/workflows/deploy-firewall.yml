@@ -1,0 +1,21 @@
+name: deploy firewall
+on: [push]
+jobs:
+  deploy-firewall:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: appleboy/ssh-action@v0.1.9
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script_stop: true
+          script: |
+            cd ~/repo
+            if [ -d "scripts"]; then git pull; else git clone https://github.com/paigeman/scripts.git; fi
+            cd scripts
+            cp server.nft /etc/nft-conf/
+            nft -f /etc/nftables.conf
+            service docker restart
+      
