@@ -1,21 +1,22 @@
 name: deploy firewall
-on: [push]
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 jobs:
   deploy-firewall:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
-      - uses: appleboy/ssh-action@v0.1.9
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
-          port: ${{ secrets.PORT }}
-          script_stop: true
-          script: |
-            cd ~/repo
-            if [ -d "scripts"]; then git pull; else git clone https://github.com/paigeman/scripts.git; fi
-            cd scripts
-            cp server.nft /etc/nft-conf/
-            nft -f /etc/nftables.conf
-            service docker restart
+    - name: Check out the pull request or main branch
+      uses: actions/checkout@v4
+      with:
+        # For pull requests, use the source branch; otherwise, use the current branch
+        ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
+        fetch-depth: 0 # Fetch all history to ensure complete build context
+    - run: |
+        cp server.nft /etc/nft-conf/
+        sudo nft -f /etc/nftables.conf
+        sudo service docker restart
+      
       
