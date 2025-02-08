@@ -23,7 +23,7 @@ class Post:
         self.formhash = self.get_formhash()
 
     def get_formhash(self):
-        rst = self.session.get(f'https://{self.hostname}/forum.php?mod=viewthread&tid=2951721&extra=page%3D1').text
+        rst = self.session.get(f'https://{self.hostname}/forum.php?mod=viewthread&tid=2995048&extra=page%3D1').text
         formhash = re.search(r'<input type="hidden" name="formhash" value="(.+?)" />', rst).group(1)
         return formhash
     
@@ -40,7 +40,7 @@ class Post:
             return self.hostname
 
     def post(self):
-        post_url = f'https://{self.hostname}/forum.php?mod=post&action=reply&fid=294&tid=2951721&extra=page%3D1&replysubmit=yes&infloat=yes&handlekey=fastpost&inajax=1'
+        post_url = f'https://{self.hostname}/forum.php?mod=post&action=reply&fid=294&tid=2995048&extra=page%3D1&replysubmit=yes&infloat=yes&handlekey=fastpost&inajax=1'
         data = {
             'message': 'ddddddddddddddddddd',
             'formhash': self.formhash,
