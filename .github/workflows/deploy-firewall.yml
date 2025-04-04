@@ -1,0 +1,22 @@
+name: deploy firewall
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  deploy-firewall:
+    runs-on: self-hosted
+    steps:
+    - name: Check out the pull request or main branch
+      uses: actions/checkout@v4
+      with:
+        # For pull requests, use the source branch; otherwise, use the current branch
+        ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
+        fetch-depth: 0 # Fetch all history to ensure complete build context
+    - run: |
+        sudo cp server.nft /etc/nft-conf/
+        sudo nft -f /etc/nftables.conf
+        sudo service docker restart
+      
+      
