@@ -10,141 +10,141 @@
 # Note: Not all distributions support this integration (e.g. liberica)
 # ==========================================
 
-# 1. 检查 mise 是否存在
+# 1. Check if mise exists
 if ! command -v mise &> /dev/null; then
-    echo "❌ 错误: 未找到 mise 命令，请确保已安装并添加到 PATH。"
+    echo "❌ Error: mise command not found. Please ensure it is installed and added to PATH."
     exit 1
 fi
 
-# 2. 获取当前 Mise 激活的 Java 信息
-# 获取当前激活的版本号 (例如: openjdk-21)
+# 2. Get current Mise-activated Java information
+# Get the currently activated version number (e.g., openjdk-21)
 JAVA_VERSION_NAME=$(mise current java 2>/dev/null | awk '{print $1}')
-# 获取该版本的绝对安装路径
+# Get the absolute installation path of this version
 JAVA_INSTALL_PATH=$(mise where java 2>/dev/null)
 
 if [ -z "$JAVA_INSTALL_PATH" ]; then
-    echo "❌ 错误: 当前目录没有激活任何 Mise Java 版本。"
-    echo "💡 请先执行: mise use java@21 (或你想要的版本)"
+    echo "❌ Error: No Mise Java version is active in the current directory."
+    echo "💡 Please run: mise use java@21 (or your desired version)"
     exit 1
 fi
 
-# 额外验证：确保版本名称有效
+# Additional validation: ensure version name is valid
 if [ -z "$JAVA_VERSION_NAME" ]; then
-    echo "❌ 错误: 无法获取 Java 版本名称。"
+    echo "❌ Error: Unable to retrieve Java version name."
     exit 1
 fi
 
-# 3. 定义目标路径 (遵循 mise 官方文档的命名方式，不加前缀)
+# 3. Define target path (following mise official documentation naming convention, no prefix)
 TARGET_DIR="/Library/Java/JavaVirtualMachines/${JAVA_VERSION_NAME}.jdk"
 
 # ==========================================
-# 功能函数
+# Function Definitions
 # ==========================================
 
 function do_link() {
-    echo "🔍 检测当前 Java: $JAVA_VERSION_NAME"
-    echo "📂 源路径: $JAVA_INSTALL_PATH"
+    echo "🔍 Detected current Java: $JAVA_VERSION_NAME"
+    echo "📂 Source path: $JAVA_INSTALL_PATH"
 
-    # --- 核心检查：源 JDK 是否有 Contents 目录 ---
+    # --- Core check: Does the source JDK have a Contents directory? ---
     if [ ! -d "$JAVA_INSTALL_PATH/Contents" ]; then
-        echo "⚠️  警告: 该 JDK 版本不包含标准的 macOS 'Contents' 目录结构。"
-        echo "🚫 这是一个非 macOS 标准构建 (可能是 Linux 版)，无法直接链接到系统。"
-        echo "🧹 无需清理，操作已取消。"
+        echo "⚠️  Warning: This JDK version does not contain the standard macOS 'Contents' directory structure."
+        echo "🚫 This is a non-macOS standard build (possibly a Linux version) and cannot be directly linked to the system."
+        echo "🧹 No cleanup needed, operation cancelled."
         exit 1
     fi
 
-    # 检查目标是否已存在
+    # Check if target already exists
     if [ -d "$TARGET_DIR" ]; then
-        echo "⚠️  目标已存在: $TARGET_DIR"
+        echo "⚠️  Target already exists: $TARGET_DIR"
         read -p "Overwrite? (y/n): " confirm
-        # 使用 tr 转换为小写以兼容旧版 Bash (macOS 默认 Bash 3.2)
+        # Use tr to convert to lowercase for compatibility with older Bash versions (macOS default Bash 3.2)
         if [[ $(echo "$confirm" | tr '[:upper:]' '[:lower:]') != "y" ]]; then exit 0; fi
 
         if ! sudo rm -rf "$TARGET_DIR"; then
-            echo "❌ 删除旧目录失败，请检查权限。"
+            echo "❌ Failed to remove old directory, please check permissions."
             exit 1
         fi
     fi
 
-    echo "🚀 开始链接..."
+    echo "🚀 Starting link creation..."
 
-    # 按照官方文档方式创建目录和链接
-    # 使用 && 确保如果 mkdir 成功但 ln 失败时能正确清理
+    # Create directory and link following official documentation
+    # Use && to ensure proper cleanup if mkdir succeeds but ln fails
     if sudo mkdir "$TARGET_DIR" && sudo ln -s "$JAVA_INSTALL_PATH/Contents" "$TARGET_DIR/Contents"; then
-        echo "✅ 链接创建成功！"
-        echo "🔗 映射关系: $TARGET_DIR/Contents -> $JAVA_INSTALL_PATH/Contents"
+        echo "✅ Link created successfully!"
+        echo "🔗 Mapping: $TARGET_DIR/Contents -> $JAVA_INSTALL_PATH/Contents"
 
-        # 验证链接是否指向预期的源路径
-        # 使用 realpath 规范化路径进行比较（处理可能的相对路径问题）
+        # Verify that the link points to the expected source path
+        # Use realpath to normalize paths for comparison (handles potential relative path issues)
         REAL_LINK_TARGET=$(realpath "$TARGET_DIR/Contents" 2>/dev/null)
         EXPECTED_TARGET=$(realpath "$JAVA_INSTALL_PATH/Contents" 2>/dev/null)
 
-        # 如果 realpath 不可用或失败，直接比较 readlink 的结果
+        # If realpath is not available or fails, compare readlink results directly
         if [ -z "$REAL_LINK_TARGET" ] || [ -z "$EXPECTED_TARGET" ]; then
             REAL_LINK_TARGET=$(readlink "$TARGET_DIR/Contents")
             EXPECTED_TARGET="$JAVA_INSTALL_PATH/Contents"
         fi
 
         if [ "$REAL_LINK_TARGET" != "$EXPECTED_TARGET" ]; then
-            echo "❌ 链接目标不匹配！"
-            echo "   预期: $EXPECTED_TARGET"
-            echo "   实际: $REAL_LINK_TARGET"
-            echo "🧹 正在执行清理工作..."
+            echo "❌ Link target mismatch!"
+            echo "   Expected: $EXPECTED_TARGET"
+            echo "   Actual: $REAL_LINK_TARGET"
+            echo "🧹 Performing cleanup..."
             sudo rm -rf "$TARGET_DIR"
-            echo "✅ 清理完成。"
+            echo "✅ Cleanup completed."
             exit 1
         fi
 
-        # 验证 macOS 是否真正识别到该 JDK
+        # Verify that macOS actually recognizes this JDK
         echo "------------------------------------------------"
-        echo "🔎 正在验证 macOS 是否识别此 JDK..."
-        # 检查目标目录是否出现在 java_home 的输出中
-        # 使用 -Fi 进行不区分大小写的固定字符串匹配
+        echo "🔎 Verifying if macOS recognizes this JDK..."
+        # Check if the target directory appears in java_home output
+        # Use -Fi for case-insensitive fixed string matching
         if /usr/libexec/java_home -V 2>&1 | grep -Fiq "${JAVA_VERSION_NAME}.jdk"; then
-            echo "✅ macOS 已成功识别该 JDK！"
+            echo "✅ macOS has successfully recognized this JDK!"
             echo "------------------------------------------------"
             echo ""
-            echo "💡 使用以下命令查看所有可用的 Java 版本:"
+            echo "💡 Use the following command to view all available Java versions:"
             echo "   /usr/libexec/java_home -V"
         else
-            echo "⚠️  macOS 未能识别此 JDK。"
+            echo "⚠️  macOS could not recognize this JDK."
             echo ""
-            echo "📚 这通常意味着该发行版不支持与 macOS 系统集成。"
-            echo "💡 常见不支持的发行版包括: liberica 等"
+            echo "📚 This usually means the distribution does not support macOS system integration."
+            echo "💡 Common unsupported distributions include: liberica, etc."
             echo ""
             read -p "Keep the link anyway and continue? (y/n): " keep_link
-            # 使用 tr 转换为小写以兼容旧版 Bash (macOS 默认 Bash 3.2)
+            # Use tr to convert to lowercase for compatibility with older Bash versions (macOS default Bash 3.2)
             if [[ $(echo "$keep_link" | tr '[:upper:]' '[:lower:]') != "y" ]]; then
-                echo "🧹 正在执行清理工作..."
+                echo "🧹 Performing cleanup..."
                 sudo rm -rf "$TARGET_DIR"
-                echo "✅ 清理完成。"
+                echo "✅ Cleanup completed."
                 exit 1
             fi
         fi
         echo "------------------------------------------------"
     else
-        echo "❌ 链接命令执行失败！"
-        echo "🧹 正在执行清理工作 (删除空目录)..."
+        echo "❌ Link command execution failed!"
+        echo "🧹 Performing cleanup (removing empty directory)..."
         sudo rm -rf "$TARGET_DIR"
-        echo "✅ 清理完成。"
+        echo "✅ Cleanup completed."
         exit 1
     fi
 }
 
 function do_unlink() {
-    echo "🗑  准备移除系统映射: $TARGET_DIR"
+    echo "🗑  Preparing to remove system mapping: $TARGET_DIR"
     
     if [ ! -d "$TARGET_DIR" ]; then
-        echo "⚠️  该路径不存在，可能未链接过: $TARGET_DIR"
+        echo "⚠️  This path does not exist, may not have been linked: $TARGET_DIR"
         exit 0
     fi
 
     sudo rm -rf "$TARGET_DIR"
-    echo "✅ 已移除链接。原 Mise 文件保留，仅断开系统集成。"
+    echo "✅ Link removed. Original Mise files retained, only system integration disconnected."
 }
 
 # ==========================================
-# 主逻辑
+# Main Logic
 # ==========================================
 
 ACTION=$1
@@ -157,12 +157,12 @@ case "$ACTION" in
         do_unlink
         ;;
     *)
-        echo "用法: $0 [link | unlink]"
+        echo "Usage: $0 [link | unlink]"
         echo ""
-        echo "  link   : 将当前 Mise Java 链接到 macOS 系统目录"
-        echo "  unlink : 取消当前 Mise Java 的系统链接"
+        echo "  link   : Link current Mise Java to macOS system directory"
+        echo "  unlink : Unlink current Mise Java from system"
         echo ""
-        echo "当前检测到的版本: $JAVA_VERSION_NAME"
+        echo "Currently detected version: $JAVA_VERSION_NAME"
         exit 1
         ;;
 esac
