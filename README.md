@@ -20,4 +20,5 @@
 - `nftables` 防火墙的配置文件
 - 恢复Windows默认应用的注册表（ `cmd` 、`batch` ...）
 - 截天帝论坛的自动打卡和挖矿脚本（基于[798love/discuz](https://github.com/798love/discuz)，感谢 @798love ）
+- `macOS` 下 `mise` 管理的 `Java` 与系统 `java_home` 的集成脚本
 - 其它一些脚本
