@@ -56,7 +56,7 @@ function do_link() {
     # 检查目标是否已存在
     if [ -d "$TARGET_DIR" ]; then
         echo "⚠️  目标已存在: $TARGET_DIR"
-        read -p "是否覆盖？(y/n): " confirm
+        read -p "Overwrite? (y/n): " confirm
         # 使用 tr 转换为小写以兼容旧版 Bash (macOS 默认 Bash 3.2)
         if [[ $(echo "$confirm" | tr '[:upper:]' '[:lower:]') != "y" ]]; then exit 0; fi
 
