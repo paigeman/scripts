@@ -112,7 +112,7 @@ function do_link() {
             echo "📚 这通常意味着该发行版不支持与 macOS 系统集成。"
             echo "💡 常见不支持的发行版包括: liberica 等"
             echo ""
-            read -p "是否保留链接继续尝试？(y/n): " keep_link
+            read -p "Keep the link anyway and continue? (y/n): " keep_link
             # 使用 tr 转换为小写以兼容旧版 Bash (macOS 默认 Bash 3.2)
             if [[ $(echo "$keep_link" | tr '[:upper:]' '[:lower:]') != "y" ]]; then
                 echo "🧹 正在执行清理工作..."
